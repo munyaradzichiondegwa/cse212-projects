@@ -22,9 +22,24 @@
         Console.WriteLine($"Number of duplicates : {CountDuplicates(data)}");
     }
 
+    /// <summary>
+    /// This function iterates through the data, using a HashSet to keep track of unique items.
+    /// If an item is already in the set, it's a duplicate, and a counter is incremented.
+    /// Otherwise, the item is added to the set. This approach has a time complexity of O(n). [7]
+    /// </summary>
     private static int CountDuplicates(int[] data)
     {
-        // Add code here.
-        return 0;
+        var unique = new HashSet<int>();
+        var duplicates = 0;
+
+        foreach (var x in data)
+        {
+            if (unique.Contains(x))
+                duplicates++;
+            else
+                unique.Add(x);
+        }
+
+        return duplicates;
     }
 }
