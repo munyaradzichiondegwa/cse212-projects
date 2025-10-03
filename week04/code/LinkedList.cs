@@ -32,7 +32,23 @@ public class LinkedList : IEnumerable<int>
     /// </summary>
     public void InsertTail(int value)
     {
-        // TODO Problem 1
+        // Create a new node with the given value.
+        Node newNode = new(value);
+
+        // If the list is empty (i.e., _tail is null), then this new node
+        // is both the head and the tail.
+        if (_tail is null)
+        {
+            _head = newNode;
+            _tail = newNode;
+        }
+        // If the list is not empty, we append the new node after the current tail.
+        else
+        {
+            _tail.Next = newNode; // The current tail's next points to the new node.
+            newNode.Prev = _tail; // The new node's previous points to the current tail.
+            _tail = newNode;      // The list's tail is now the new node.
+        }
     }
 
 
@@ -64,7 +80,19 @@ public class LinkedList : IEnumerable<int>
     /// </summary>
     public void RemoveTail()
     {
-        // TODO Problem 2
+        // If the list has one or zero items, removing the tail results in an empty list.
+        // This condition handles both cases.
+        if (_head == _tail)
+        {
+            _head = null;
+            _tail = null;
+        }
+        // If the list has more than one item, only the tail is affected.
+        else if (_tail is not null)
+        {
+            _tail.Prev!.Next = null; // The node before the tail becomes the new last node.
+            _tail = _tail.Prev;      // Update the tail to point to this new last node.
+        }
     }
 
     /// <summary>
@@ -108,7 +136,36 @@ public class LinkedList : IEnumerable<int>
     /// </summary>
     public void Remove(int value)
     {
-        // TODO Problem 3
+        // Start searching from the head of the list.
+        Node? curr = _head;
+        while (curr is not null)
+        {
+            if (curr.Data == value)
+            {
+                // Case 1: The node to remove is the head.
+                if (curr == _head)
+                {
+                    RemoveHead();
+                    return; // Exit after removing the first match.
+                }
+                // Case 2: The node to remove is the tail.
+                else if (curr == _tail)
+                {
+                    RemoveTail();
+                    return; // Exit after removing the first match.
+                }
+                // Case 3: The node is in the middle.
+                else
+                {
+                    // Link the previous and next nodes together, bypassing the current node.
+                    curr.Prev!.Next = curr.Next;
+                    curr.Next!.Prev = curr.Prev;
+                    return; // Exit after removing the first match.
+                }
+            }
+            // Move to the next node in the list.
+            curr = curr.Next;
+        }
     }
 
     /// <summary>
@@ -116,7 +173,19 @@ public class LinkedList : IEnumerable<int>
     /// </summary>
     public void Replace(int oldValue, int newValue)
     {
-        // TODO Problem 4
+        // Start at the head of the list.
+        Node? curr = _head;
+        // Iterate through the entire list.
+        while (curr is not null)
+        {
+            // If the current node's data matches the old value, replace it.
+            if (curr.Data == oldValue)
+            {
+                curr.Data = newValue;
+            }
+            // Move to the next node.
+            curr = curr.Next;
+        }
     }
 
     /// <summary>
@@ -146,8 +215,15 @@ public class LinkedList : IEnumerable<int>
     /// </summary>
     public IEnumerable Reverse()
     {
-        // TODO Problem 5
-        yield return 0; // replace this line with the correct yield return statement(s)
+        // Start at the tail for reverse iteration.
+        var curr = _tail;
+        while (curr is not null)
+        {
+            // Provide the data of the current node.
+            yield return curr.Data;
+            // Move backward in the linked list.
+            curr = curr.Prev;
+        }
     }
 
     public override string ToString()
